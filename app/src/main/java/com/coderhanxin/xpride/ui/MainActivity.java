@@ -22,22 +22,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.coderhanxin.xpride.R;
+import com.coderhanxin.xpride.ui.timeline.FriendsTimelineActivity;
 import com.coderhanxin.xpride.weibo.WBAuthActivity;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    @InjectView(R.id.auth_btn)
+    Button mAuthBtn;
+    @InjectView(R.id.timeline_btn)
+    Button mTimelineBtn;
+    @InjectView(R.id.oneStatus_btn)
+    Button mOneStatusBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
-        findViewById(R.id.auth_btn).setOnClickListener(new View.OnClickListener() {
+        mAuthBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mTimelineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FriendsTimelineActivity.class);
                 startActivity(intent);
             }
         });

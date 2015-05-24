@@ -37,9 +37,6 @@ public class App extends Application {
         super.onCreate();
         mContext = getApplicationContext();
 
-        Logger.init("MY_LOG_TAG")
-                .setMethodCount(3)
-                .hideThreadInfo()
-                .setLogLevel(LogLevel.FULL);
+        Logger.init().setMethodCount(3).setLogLevel(LogLevel.FULL);
     }
 }

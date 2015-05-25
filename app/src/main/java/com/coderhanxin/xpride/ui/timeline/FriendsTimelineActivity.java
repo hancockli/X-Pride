@@ -17,10 +17,14 @@
 package com.coderhanxin.xpride.ui.timeline;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.coderhanxin.xpride.R;
 import com.coderhanxin.xpride.ui.base.BaseActivity;
+import com.coderhanxin.xpride.ui.custom_views.StatusCardLayout;
+import com.coderhanxin.xpride.utils.TimeUtils;
 import com.coderhanxin.xpride.weibo.AccessTokenKeeper;
 import com.coderhanxin.xpride.weibo.Constants;
 import com.orhanobut.logger.Logger;
@@ -31,11 +35,14 @@ import com.sina.weibo.sdk.openapi.StatusesAPI;
 import com.sina.weibo.sdk.openapi.models.ErrorInfo;
 import com.sina.weibo.sdk.openapi.models.Status;
 import com.sina.weibo.sdk.openapi.models.StatusList;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by CoderHanXin on 2015/05/24.
  */
 public class FriendsTimelineActivity extends BaseActivity {
+
+    private StatusCardLayout mCardLayout;
 
     /**
      * 当前 Token 信息
@@ -56,6 +63,13 @@ public class FriendsTimelineActivity extends BaseActivity {
                 if (response.startsWith("{\"statuses\"")) {
                     // 调用 StatusList#parse 解析字符串成微博列表对象
                     StatusList statuses = StatusList.parse(response);
+                    Status status = statuses.statusList.get(0);
+                    mCardLayout.setName(status.user.screen_name);
+                    mCardLayout.setCreateTime(TimeUtils.instance(FriendsTimelineActivity.this).buildTimeString(status.created_at));
+                    mCardLayout.setSource(Html.fromHtml(status.source).toString());
+                    mCardLayout.setText(status.text);
+                    Picasso.with(FriendsTimelineActivity.this).load(status.user.avatar_large).into(mCardLayout.getmProfileImageView());
+
                     if (statuses != null && statuses.total_number > 0) {
                         Toast.makeText(FriendsTimelineActivity.this,
                                 "获取微博信息流成功, 条数: " + statuses.statusList.size(),
@@ -90,16 +104,19 @@ public class FriendsTimelineActivity extends BaseActivity {
         // 对statusAPI实例化
         mStatusesAPI = new StatusesAPI(this, Constants.APP_KEY, mAccessToken);
         mStatusesAPI.friendsTimeline(0L, 0L, 10, 1, false, 0, false, mListener);
+
     }
 
     @Override
     public void setContentView() {
 
+        setContentView(R.layout.activity_friends_timeline);
     }
 
     @Override
     public void findViews() {
 
+        mCardLayout = (StatusCardLayout) findViewById(R.id.card);
     }
 
     @Override

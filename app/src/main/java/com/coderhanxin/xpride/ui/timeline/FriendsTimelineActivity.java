@@ -63,12 +63,13 @@ public class FriendsTimelineActivity extends BaseActivity {
                 if (response.startsWith("{\"statuses\"")) {
                     // 调用 StatusList#parse 解析字符串成微博列表对象
                     StatusList statuses = StatusList.parse(response);
+
                     Status status = statuses.statusList.get(0);
                     mCardLayout.setName(status.user.screen_name);
                     mCardLayout.setCreateTime(TimeUtils.instance(FriendsTimelineActivity.this).buildTimeString(status.created_at));
                     mCardLayout.setSource(Html.fromHtml(status.source).toString());
                     mCardLayout.setText(status.text);
-                    Picasso.with(FriendsTimelineActivity.this).load(status.user.avatar_large).into(mCardLayout.getmProfileImageView());
+                    Picasso.with(FriendsTimelineActivity.this).load(status.user.avatar_large).into(mCardLayout.getProfileImageView());
 
                     if (statuses != null && statuses.total_number > 0) {
                         Toast.makeText(FriendsTimelineActivity.this,
@@ -98,13 +99,6 @@ public class FriendsTimelineActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 获取当前已保存过的 Token
-        mAccessToken = AccessTokenKeeper.readAccessToken(this);
-        // 对statusAPI实例化
-        mStatusesAPI = new StatusesAPI(this, Constants.APP_KEY, mAccessToken);
-        mStatusesAPI.friendsTimeline(0L, 0L, 10, 1, false, 0, false, mListener);
-
     }
 
     @Override
@@ -122,6 +116,11 @@ public class FriendsTimelineActivity extends BaseActivity {
     @Override
     public void getData() {
 
+        // 获取当前已保存过的 Token
+        mAccessToken = AccessTokenKeeper.readAccessToken(this);
+        // 对statusAPI实例化
+        mStatusesAPI = new StatusesAPI(this, Constants.APP_KEY, mAccessToken);
+        mStatusesAPI.friendsTimeline(0L, 0L, 10, 1, false, 0, false, mListener);
     }
 
     @Override

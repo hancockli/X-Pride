@@ -71,7 +71,7 @@ public class StatusCardLayout extends FrameLayout {
         mText.setText(text);
     }
 
-    public ImageView getmProfileImageView() {
+    public ImageView getProfileImageView() {
         return mProfileImageView;
     }
 }
